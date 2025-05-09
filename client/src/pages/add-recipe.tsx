@@ -33,7 +33,7 @@ const AddRecipePage = () => {
   
   // Fetch categories with proper typing
   const { data: categories = [] } = useQuery<any[]>({
-    queryKey: [`/api/categories/${season}`],
+    queryKey: [`/api/categories`],
   });
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
