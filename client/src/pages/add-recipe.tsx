@@ -34,6 +34,13 @@ const AddRecipePage = () => {
   // Fetch categories with proper typing
   const { data: categories = [] } = useQuery<any[]>({
     queryKey: [`/api/categories/${season}`],
+    queryFn: async () => {
+      const response = await fetch(`/api/categories/${season}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      return response.json();
+    }
   });
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
