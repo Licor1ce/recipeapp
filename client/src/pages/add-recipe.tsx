@@ -33,7 +33,7 @@ const AddRecipePage = () => {
   
   // Fetch categories with proper typing
   const { data: categories = [] } = useQuery<any[]>({
-    queryKey: [`/api/categories`],
+    queryKey: [`/api/categories/${season}`],
   });
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -168,7 +168,7 @@ const AddRecipePage = () => {
                     required
                   >
                     <option value="">Select a category</option>
-                    {categories.filter((category: any) => category.season === season).map((category: any) => (
+                    {categories.map((category: any) => (
                       <option key={category.id} value={category.id}>
                         {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                       </option>
