@@ -79,15 +79,15 @@ export class MemStorage implements IStorage {
       { name: "beverages", icon: "🍹", season: "autumn-winter" },
       { name: "desserts", icon: "🍰", season: "autumn-winter" },
       
-      { name: "starters", icon: "🥖", season: "spring-summer" },
-      { name: "soups", icon: "🍜", season: "spring-summer" },
+      { name: "starters", icon: "🥖", season: "autumn-winter" },
+      { name: "soups", icon: "🍜", season: "autumn-winter" },
       { name: "salads", icon: "🥗", season: "spring-summer" },
-      { name: "breakfast", icon: "🍳", season: "spring-summer" },
+      { name: "breakfast", icon: "🍳", season: "autumn-winter" },
       { name: "lunch", icon: "🍝", season: "spring-summer" },
-      { name: "dinner", icon: "🍲", season: "spring-summer" },
+      { name: "dinner", icon: "🍲", season: "autumn-winter" },
       { name: "snacks", icon: "🥨", season: "spring-summer" },
       { name: "beverages", icon: "🍹", season: "spring-summer" },
-      { name: "desserts", icon: "🍰", season: "spring-summer" },
+      { name: "desserts", icon: "🍰", season: "both" },
     ];
     
     categories.forEach(cat => {
