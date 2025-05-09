@@ -10,7 +10,7 @@ const AddRecipePage = () => {
   const { season } = useParams();
   const [, navigate] = useLocation();
   const { toast } = useToast();
-  
+
   const [recipeData, setRecipeData] = useState({
     title: '',
     category: '',
@@ -27,32 +27,33 @@ const AddRecipePage = () => {
     tips: [],
     image: ''
   });
-  
+
   // For image handling
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
+
   // Fetch categories with proper typing
   const { data: categories = [] } = useQuery<any[]>({
     queryKey: [`/api/categories/${season}`],
     queryFn: async () => {
-      const response = await fetch(`/api/categories/${season}`);
+      const baseUrl = process.env.NODE_ENV === 'production' ? 'https://your-api-url.com' : '';
+      const response = await fetch(`${baseUrl}/api/categories/${season}`);
       if (!response.ok) {
         throw new Error('Failed to fetch categories');
       }
       return response.json();
     }
   });
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     setRecipeData(prev => ({ ...prev, [id]: value }));
   };
-  
+
   // Handle image upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     // Convert to base64 for storage
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -62,7 +63,7 @@ const AddRecipePage = () => {
     };
     reader.readAsDataURL(file);
   };
-  
+
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { id, value } = e.target;
     const lines = value.split('\n').filter(line => line.trim());
@@ -71,17 +72,17 @@ const AddRecipePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       // Create a new recipe object
       // Log the recipe data
       console.log("Submitting recipe with data:", recipeData);
-      
+
       // Find the category name from selected category ID
       const selectedCategory = categories.find(
         (cat: any) => cat.id.toString() === recipeData.category
       );
-      
+
       // Create a properly formatted recipe object
       const newRecipe = {
         ...recipeData,
@@ -97,28 +98,28 @@ const AddRecipePage = () => {
         rating: "4.0",
         reviews: 0,
       };
-      
+
       // Log categories before saving for debugging
       console.log("Available categories:", categories);
       console.log("Selected category ID:", recipeData.category);
       console.log("Selected category object:", selectedCategory);
       console.log("Final recipe to save:", newRecipe);
-      
+
       console.log("Saving new recipe:", newRecipe);
-      
+
       // Store the recipe in local storage for this demo
       const existingRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
       const updatedRecipes = [...existingRecipes, newRecipe];
       localStorage.setItem('recipes', JSON.stringify(updatedRecipes));
-      
+
       // Invalidate all recipe-related queries to refresh data
       queryClient.invalidateQueries({queryKey: ['/api/recipes']});
-      
+
       toast({
         title: "Recipe Added!",
         description: "Your recipe has been successfully added.",
       });
-      
+
       navigate(`/categories/${season}`);
     } catch (error) {
       toast({
@@ -128,7 +129,7 @@ const AddRecipePage = () => {
       });
     }
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -151,7 +152,7 @@ const AddRecipePage = () => {
             {/* Recipe Basics */}
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h2 className="text-lg font-bold text-gray-700 mb-4">Recipe Details</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Recipe Title</label>
@@ -164,7 +165,7 @@ const AddRecipePage = () => {
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                   <select 
@@ -182,7 +183,7 @@ const AddRecipePage = () => {
                     ))}
                   </select>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="prepTime" className="block text-sm font-medium text-gray-700 mb-1">Prep Time (min)</label>
@@ -209,7 +210,7 @@ const AddRecipePage = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <label htmlFor="servings" className="block text-sm font-medium text-gray-700 mb-1">Servings</label>
                   <input 
@@ -222,7 +223,7 @@ const AddRecipePage = () => {
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label htmlFor="icon" className="block text-sm font-medium text-gray-700 mb-1">Recipe Icon</label>
                   <div className="grid grid-cols-5 gap-2 p-2 border border-gray-300 rounded-md">
@@ -238,7 +239,7 @@ const AddRecipePage = () => {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <label htmlFor="recipeImage" className="block text-sm font-medium text-gray-700 mb-1">
                     Recipe Photo (Optional)
@@ -256,7 +257,7 @@ const AddRecipePage = () => {
                         file:bg-mint file:text-white
                         hover:file:bg-green-600"
                     />
-                    
+
                     {imagePreview && (
                       <div className="mt-2 relative">
                         <img 
@@ -282,7 +283,7 @@ const AddRecipePage = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Ingredients */}
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h2 className="text-lg font-bold text-gray-700 mb-4">Ingredients</h2>
@@ -298,7 +299,7 @@ const AddRecipePage = () => {
                 ></textarea>
               </div>
             </div>
-            
+
             {/* Preparation */}
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h2 className="text-lg font-bold text-gray-700 mb-4">Preparation</h2>
@@ -314,7 +315,7 @@ const AddRecipePage = () => {
                 ></textarea>
               </div>
             </div>
-            
+
             {/* Cooking */}
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h2 className="text-lg font-bold text-gray-700 mb-4">Cooking</h2>
@@ -330,7 +331,7 @@ const AddRecipePage = () => {
                 ></textarea>
               </div>
             </div>
-            
+
             {/* Tips */}
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h2 className="text-lg font-bold text-gray-700 mb-4">Tips (Optional)</h2>
@@ -345,7 +346,7 @@ const AddRecipePage = () => {
                 ></textarea>
               </div>
             </div>
-            
+
             {/* Submit Button */}
             <div className="flex justify-end">
               <button 
