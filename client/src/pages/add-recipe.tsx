@@ -35,7 +35,7 @@ const AddRecipePage = () => {
   const { data: categories = [] } = useQuery<any[]>({
     queryKey: [`/api/categories/${season}`],
     queryFn: async () => {
-      const baseUrl = process.env.NODE_ENV === 'production' ? 'https://recipe-app-cat.netlify.app/' : '';
+      const baseUrl = import.meta.env.PROD ? 'https://recipe-app-cat.netlify.app' : '';
       const response = await fetch(`${baseUrl}/api/categories/${season}`);
       if (!response.ok) {
         throw new Error('Failed to fetch categories');
